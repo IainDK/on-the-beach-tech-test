@@ -7,5 +7,9 @@ describe JobProcessor do
     it 'returns an empty string when passed an empty string (no jobs)' do
       expect(subject.order_jobs("")).to eq ""
     end
+
+    it 'returns a single job when passed a single job (a)' do
+      expect(subject.order_jobs("a =>")).to eq "a"
+    end
   end
 end
