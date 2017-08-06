@@ -2,7 +2,7 @@ class JobProcessor
 
   def order_jobs(jobs)
     return "" if jobs.empty?
-    ordered_job_array(jobs)
+    ordered_job_array(jobs).join("")
   end
 
   private
@@ -21,12 +21,13 @@ class JobProcessor
   end
 
   def ordered_job_array(jobs)
-    job_array = []
-    dependencies = job_hash(jobs).values
-    job_array << dependencies
-    job_hash(jobs).keys.each do |key|
-      job_array << key unless job_array.flatten.include?(key)
+    job_array = job_hash(jobs).keys
+    job_hash(jobs).each do |name, dependency|
+      if job_array.include?(dependency)
+        name_index = job_array.index(name)
+        job_array.insert(name_index, dependency)
+      end
     end
-    job_array.flatten.reject { |el| el == " " }.join("")
+    job_array.uniq
   end
 end

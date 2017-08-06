@@ -17,7 +17,7 @@ describe JobProcessor do
     end
 
     it 'returns a single job with a dependency in order' do
-      expect(subject.order_jobs("a => , b => c, c => ")).to eq "cab"
+      expect(subject.order_jobs("a => , b => c, c => ")).to eq "acb"
     end
 
     it 'returns a single job with a dependency in order - 2' do
@@ -26,6 +26,53 @@ describe JobProcessor do
 
     it 'returns a single job with a dependency in order - 3' do
       expect(subject.order_jobs("a => , b => , c => a")).to eq "abc"
+    end
+
+    it 'returns a list of jobs with multiple dependencies in order' do
+      expect(subject.order_jobs("a => ,
+                                 b => c,
+                                 c => f,
+                                 d => a,
+                                 e => b,
+                                 f => ")).to eq "afcbde"
+    end
+
+    it 'returns a list of jobs with multiple dependencies in order (testing different combinations: 2)' do
+      expect(subject.order_jobs("a => b,
+                                 b => c,
+                                 c => f,
+                                 d => a,
+                                 e => ,
+                                 f => ")).to eq "fcbade"
+    end
+
+    it 'returns a list of jobs with multiple dependencies in order (testing different combinations: 3)' do
+      expect(subject.order_jobs("a => f,
+                                 b => e,
+                                 c => a,
+                                 d => ,
+                                 e => d,
+                                 f => ")).to eq "fadebc"
+    end
+
+    it 'returns a list of jobs with multiple dependencies in order (testing different combinations: 4)' do
+      expect(subject.order_jobs("a => ,
+                                 b => ,
+                                 c => a,
+                                 d => f,
+                                 e => b,
+                                 f => e")).to eq "abcefd"
+
+    end
+
+    it 'returns a list of jobs with multiple dependencies in order (testing different combinations: 5)' do
+      expect(subject.order_jobs("a => d,
+                                 b => ,
+                                 c => f,
+                                 d => ,
+                                 e => ,
+                                 f => e")).to eq "dabefc"
+
     end
   end
 end
