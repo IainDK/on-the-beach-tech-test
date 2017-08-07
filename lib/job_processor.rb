@@ -1,33 +1,48 @@
 class JobProcessor
 
-  def order_jobs(jobs)
-    return "" if jobs.empty?
-    ordered_job_array(jobs).join("")
+  def initialize(jobs)
+    @jobs = jobs
+    @ordered_jobs = []
+  end
+
+  def return_ordered_jobs
+    organise_jobs
   end
 
   private
 
-  def string_to_array(jobs)
-    array_of_jobs = jobs.split(",")
-    array_of_jobs.map { |job| job.lstrip }
+  def job_parser
+    @jobs.split(",").map { |job| job.lstrip }
   end
 
-  def job_hash(jobs)
+  def job_hash
     all_jobs = {}
-    string_to_array(jobs).each do |job|
+    job_parser.each do |job|
       all_jobs[job[0]] = job[-1]
     end
     all_jobs
   end
 
-  def ordered_job_array(jobs)
-    job_array = job_hash(jobs).keys
-    job_hash(jobs).each do |name, dependency|
-      if job_array.include?(dependency)
-        name_index = job_array.index(name)
-        job_array.insert(name_index, dependency)
+  def push_jobs_without_dependencies
+    job_hash.each { |job, dependency| @ordered_jobs << job if dependency == " "}
+  end
+
+  def push_jobs_with_singular_dependencies
+    job_hash.each { |job, dependency| @ordered_jobs << job if @ordered_jobs.include?(dependency)}
+  end
+
+  def push_jobs_with_nested_dependencies
+    job_hash.each do |job, dependency|
+      unless @ordered_jobs.include?(job)
+        @ordered_jobs.include?(dependency) ? @ordered_jobs << job : @ordered_jobs << dependency << job
       end
     end
-    job_array.uniq
+  end
+
+  def organise_jobs
+    push_jobs_without_dependencies
+    push_jobs_with_singular_dependencies
+    push_jobs_with_nested_dependencies
+    @ordered_jobs.join("")
   end
 end
