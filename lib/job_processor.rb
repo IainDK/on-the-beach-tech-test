@@ -6,6 +6,7 @@ class JobProcessor
   end
 
   def return_ordered_jobs
+    job_depends_on_itself?
     organise_jobs
   end
 
@@ -44,5 +45,11 @@ class JobProcessor
     push_jobs_with_singular_dependencies
     push_jobs_with_nested_dependencies
     @ordered_jobs.join("")
+  end
+
+  def job_depends_on_itself?
+    job_hash.each do |job, dependency|
+      fail "A job can't depend on itself." if job == dependency
+    end
   end
 end

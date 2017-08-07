@@ -64,5 +64,15 @@ describe JobProcessor do
       job_processor = JobProcessor.new("a => , b => , c => a, d => c, e => , f => ")
       expect(job_processor.return_ordered_jobs).to eq "abefcd"
     end
+
+    it 'returns an error when passed a job that depends on itself e.g. (c => c)' do
+      job_processor = JobProcessor.new("a => , b => , c => c")
+      expect { job_processor.return_ordered_jobs }.to raise_error "A job can't depend on itself."
+    end
+
+    it 'returns an error when passed a job that depends on itself (testing different combinations: 2))' do
+      job_processor = JobProcessor.new("a => , b => a, c => , d => e, e => , f => f")
+      expect { job_processor.return_ordered_jobs }.to raise_error "A job can't depend on itself."
+    end
   end
 end
