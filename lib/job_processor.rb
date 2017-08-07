@@ -6,8 +6,9 @@ class JobProcessor
   end
 
   def return_ordered_jobs
-    job_depends_on_itself?
-    organise_jobs
+    fail "A job can't depend on itself." if job_depends_on_itself?
+    fail "Jobs can't have circular dependencies." if job_has_circular_dependencies?
+    organise_jobs.join("")
   end
 
   private
@@ -41,15 +42,32 @@ class JobProcessor
   end
 
   def organise_jobs
+    delete_job_entries unless @ordered_jobs.empty?
     push_jobs_without_dependencies
     push_jobs_with_singular_dependencies
     push_jobs_with_nested_dependencies
-    @ordered_jobs.join("")
+    @ordered_jobs
+  end
+
+  def delete_job_entries
+    @ordered_jobs.clear
   end
 
   def job_depends_on_itself?
+    self_dependent = false
     job_hash.each do |job, dependency|
-      fail "A job can't depend on itself." if job == dependency
+      self_dependent = true if job == dependency
     end
+    self_dependent
+  end
+
+  def job_has_circular_dependencies?
+    circular_dependencies = false
+    job_hash.each do |job, dependency|
+      unless dependency == " "
+        circular_dependencies = true if organise_jobs.index(dependency) > organise_jobs.index(job)
+      end
+    end
+    circular_dependencies
   end
 end

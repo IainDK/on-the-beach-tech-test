@@ -74,5 +74,20 @@ describe JobProcessor do
       job_processor = JobProcessor.new("a => , b => a, c => , d => e, e => , f => f")
       expect { job_processor.return_ordered_jobs }.to raise_error "A job can't depend on itself."
     end
+
+    it 'returns an error when passed a job that has circular dependencies' do
+      job_processor = JobProcessor.new("a => , b => c, c => f, d => a, e => , f => b")
+      expect { job_processor.return_ordered_jobs }.to raise_error "Jobs can't have circular dependencies."
+    end
+
+    it 'returns an error when passed a job that has circular dependencies (different combination: 2)' do
+      job_processor = JobProcessor.new("a => b, b => a")
+      expect { job_processor.return_ordered_jobs }.to raise_error "Jobs can't have circular dependencies."
+    end
+
+    it 'returns an error when passed a job that has circular dependencies (different combination: 3)' do
+      job_processor = JobProcessor.new("a => b, b => c, c => a")
+      expect { job_processor.return_ordered_jobs }.to raise_error "Jobs can't have circular dependencies."
+    end
   end
 end
