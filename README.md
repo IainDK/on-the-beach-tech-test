@@ -71,7 +71,7 @@ The result should be an error stating that jobs can’t have circular dependenci
 
 ## My Approach
 
-#### Practices Followed
+### Practices Followed
 
 I completed the exercise using TDD, following the Red/Green/Refactor cycle. My process looked like this:
 
@@ -83,34 +83,48 @@ At two points during the time of creating the program, I realised that a big ref
 
 Multiple tests were written for the more complex requirements - particularly step 5 and step 7 - to ensure the program was working as intended.
 
-#### The Logic behind the Code
+### The Logic behind the Code
 
-`{ job => dependency }`
+```
+{ job => dependency }
+```
 
 Given that every job will always be present in the final sequence, I started by pushing all jobs inside of an array. I then iterated through a hash (in the structure seen above) to check if the dependency was present inside of the array (some dependencies were blank). If the dependency existed, I would then insert it into the array before the index of the job.
 
 A simple demonstration to help visualise the process:
 
-`job_hash = { a => , b => c, c => }`
+```
+job_hash = { a => , b => c, c => }
+```
 
 This is our job hash. Here, b relies on c, and as such, c must come before b in the final sequence.
 
-`job_array = [a, b, c]`
+```
+job_array = [a, b, c]
+```
 
 Firstly, an array is formed using all of the hashes keys.
 
-`job_hash.each do |job, dependency|`
+```
+job_hash.each do |job, dependency|
+```
 
 The job hash will then be iterated through to check if the dependency exists inside of `job_array`.
 
-`job_array = [a, c, b, c]`
+```
+job_array = [a, c, b, c]
+```
 
 Providing that it does, the dependency will then be pushed into the array using the index of the job.
 
-`job_array = [a, c, b]`
+```
+job_array = [a, c, b]
+```
 
 Lastly, I then used the built in Ruby method `.uniq` to eliminate all duplicates of the dependency. As the method will always retain the first first occurrence of an element, this seemed perfect for the job.
 
-`job_array.index(dependency) > job_array.index(job)`
+```
+job_array.index(dependency) > job_array.index(job)
+```
 
 I used similar logic for detecting circular dependencies. I performed a check to find out if any of the job's dependency indexes were higher than that of the job index itself. If this returned true at any point, then I knew I could raise an error.
