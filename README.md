@@ -2,6 +2,14 @@
 
 This exercise was completed using Ruby 2.3.1 and RSpec 3.5
 
+## Setting-up
+
+1. Clone this repository
+2. Create and enter a new directory, and run `git init` via the command line
+3. Run 'git remote add origin https://github.com/YOURNAME/on-the-beach-tech-test.git'
+2. Run `bundle`
+3. Run RSpec to execute to tests
+
 ## Requirements
 
 Imagine we have a list of jobs, each represented by a character. Because certain jobs must be done before others, a job may have a dependency on another job. For example, a may depend on b, meaning the final sequence of jobs should place b before a. If a has no dependency, the position of a in the final sequence does not matter.
