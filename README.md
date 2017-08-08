@@ -1,6 +1,6 @@
 # On The Beach Tech Test
 
-This exercise was completed using Ruby 2.3.1 and RSpec 3.5.4
+This exercise was completed using Ruby 2.3.1 and RSpec 3.5
 
 # Requirements
 
@@ -10,7 +10,8 @@ Imagine we have a list of jobs, each represented by a character. Because certain
 
 * Given the following job structure:
 
-```a =>
+```
+a =>
 ```
 
 The result should be a sequence consisting of a single job a.
