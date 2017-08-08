@@ -18,48 +18,53 @@ The result should be a sequence consisting of a single job a.
 
 * Given the following job structure:
 
-```a =>
-   b =>
-   c =>
+```
+a =>
+b =>
+c =>
 ```
 The result should be a sequence containing all three jobs abc in no significant order.
 
 * Given the following job structure:
 
-```a =>
-   b => c
-   c =>
+```
+a =>
+b => c
+c =>
 ```
 The result should be a sequence that positions c before b, containing all three jobs abc.
 
 * Given the following job structure:
 
-```a =>
-   b => c
-   c => f
-   d => a
-   e => b
-   f =>
+```
+a =>
+b => c
+c => f
+d => a
+e => b
+f =>
 ```
 
 The result should be a sequence that positions f before c, c before b, b before e and a before d containing all six jobs abcdef.
 
 * Given then following structure:
 
-```a =>
-   b =>
-   c => c
+```
+a =>
+b =>
+c => c
 ```
 The result should be an error stating that jobs can’t depend on themselves.
 
 * Given the following structure:
 
-```a =>
-   b => c
-   c => f
-   d => a
-   e =>
-   f => b
+```
+a =>
+b => c
+c => f
+d => a
+e =>
+f => b
 ```
 
 The result should be an error stating that jobs can’t have circular dependencies.
