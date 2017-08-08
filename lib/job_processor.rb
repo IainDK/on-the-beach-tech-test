@@ -2,13 +2,12 @@ class JobProcessor
 
   def initialize(jobs)
     @jobs = jobs
-    @ordered_jobs = []
   end
 
-  def return_ordered_jobs
+  def ordered_jobs
     fail "A job can't depend on itself." if job_depends_on_itself?
     fail "Jobs can't have circular dependencies." if job_has_circular_dependencies?
-    organise_jobs.join("")
+    order_jobs.join
   end
 
   private
@@ -25,32 +24,15 @@ class JobProcessor
     all_jobs
   end
 
-  def push_jobs_without_dependencies
-    job_hash.each { |job, dependency| @ordered_jobs << job if dependency == " "}
-  end
-
-  def push_jobs_with_singular_dependencies
-    job_hash.each { |job, dependency| @ordered_jobs << job if @ordered_jobs.include?(dependency)}
-  end
-
-  def push_jobs_with_nested_dependencies
+  def order_jobs
+    job_array = job_hash.keys
     job_hash.each do |job, dependency|
-      unless @ordered_jobs.include?(job)
-        @ordered_jobs.include?(dependency) ? @ordered_jobs << job : @ordered_jobs << dependency << job
+      if job_array.include?(dependency)
+        job_index = job_array.index(job)
+        job_array.insert(job_index, dependency)        # Insert the dependency at its job index e.g. ("a => b") > [b, a]
       end
     end
-  end
-
-  def organise_jobs
-    delete_job_entries unless @ordered_jobs.empty?
-    push_jobs_without_dependencies
-    push_jobs_with_singular_dependencies
-    push_jobs_with_nested_dependencies
-    @ordered_jobs
-  end
-
-  def delete_job_entries
-    @ordered_jobs.clear
+    job_array.uniq
   end
 
   def job_depends_on_itself?
@@ -65,7 +47,7 @@ class JobProcessor
     circular_dependencies = false
     job_hash.each do |job, dependency|
       unless dependency == " "
-        circular_dependencies = true if organise_jobs.index(dependency) > organise_jobs.index(job)
+        circular_dependencies = true if order_jobs.index(dependency) > order_jobs.index(job)
       end
     end
     circular_dependencies
