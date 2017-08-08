@@ -9,7 +9,7 @@ This exercise was completed using Ruby 2.3.1 and RSpec 3.5
 3. Run `git remote add origin https://github.com/YOURNAME/on-the-beach-tech-test.git`
 4. Run `git pull origin master`
 4. Run `bundle`
-5. Run RSpec to execute to tests
+5. Run `rspec` to execute to tests
 
 ## Requirements
 
